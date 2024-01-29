@@ -1,18 +1,19 @@
 public enum Gallows {
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4),
-    FIVE(5),
-    SIX(6);
+    ZERO("   +-----+\n   |     |\n         |\n         |\n         |\n         |\n=========|"),
+    ONE("   +-----+\n   |     |\n   O     |\n         |\n         |\n         |\n=========|"),
+    TWO("   +-----+\n   |     |\n   O     |\n   |     |\n         |\n         |\n=========|"),
+    THREE("   +-----+\n   |     |\n   O     |\n  /|     |\n         |\n         |\n=========|"),
+    FOUR("   +-----+\n   |     |\n   O     |\n  /|\\    |\n         |\n         |\n=========|"),
+    FIVE("   +-----+\n   |     |\n   O     |\n  /|\\    |\n  /      |\n         |\n=========|"),
+    SIX("   +-----+\n   |     |\n   O     |\n  /|\\    |\n  / \\    |\n         |\n=========|");
 
-    private String gallowsStep;
+    private final String gallowsStep;
 
-    private String ONE() {
-        return "2";
+    public String getGallows() {
+        return gallowsStep;
     }
 
-    Gallows(int i) {
-        this.gallowsStep = ONE();
+    Gallows(String gallowsStep) {
+        this.gallowsStep = gallowsStep;
     }
 }
