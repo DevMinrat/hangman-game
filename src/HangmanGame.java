@@ -1,46 +1,31 @@
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class HangmanGame {
-    private Scanner scanner;
-    private String riddleWord;
+    private final Scanner scanner;
+    private final String[] riddleWord;
+    private final StringBuilder mask;
     private int mistakeCounter;
+    private final ArrayList<String> mistakeLetters = new ArrayList<>();
 
-    public HangmanGame(GameWord word) {
-        this.riddleWord = word.getWord().toLowerCase();
+    private static final String SINGLE_LETTER_REGEX = "^[А-Яа-я]$";
+    private static final int MAX_MISTAKES = 6;
+
+    public HangmanGame(String word) {
+        this.riddleWord = word.toLowerCase().split("");
         this.scanner = new Scanner(System.in);
+        this.mask = new StringBuilder("_".repeat(riddleWord.length));
     }
 
     public void playGame() {
-        if (!startOrLeave())
-            return;
-
-        StringBuilder mask = new StringBuilder("_".repeat(riddleWord.length()));
-        printGameState(mask);
-
-        System.out.println(riddleWord);
-    }
-
-    private boolean startOrLeave() {
-        System.out.println("Начать новую игру? Введите Y/N: ");
-
         do {
-            String input = scanner.nextLine().toLowerCase();
-
-            if (Objects.equals(input, "n")) {
-                System.out.println("До встречи!");
-                return false;
-            } else if (Objects.equals(input, "y")) {
-                System.out.println("Начнем игру!");
-                return true;
-            } else {
-                System.out.println("Введите 'Y' для начала игры или 'N' для завершения!");
-            }
-        } while (true);
-
+            printGameState();
+            playerTurn();
+        } while (checkGameState());
     }
 
-    private String getGallows(int mistakeCounter) {
+    private String getGallows() {
         switch (mistakeCounter) {
             case 0 -> {
                 return Gallows.ZERO.getGallows();
@@ -67,22 +52,59 @@ public class HangmanGame {
         }
     }
 
-    private void printGameState(StringBuilder mask) {
-        System.out.println(getGallows(mistakeCounter));
+    private void printGameState() {
+        System.out.println(getGallows());
         System.out.println("Cлово: " + mask);
-        System.out.println("Ошибки (" + mistakeCounter + "): " + "ф");
-
+        System.out.printf("Ошибки (%d): \u001B[31m%s\u001B[0m%n", mistakeCounter, String.join(", ", mistakeLetters));
     }
 
     private void playerTurn() {
         System.out.println("Введите букву: ");
-        String input = scanner.nextLine();
-        validateInput(input);
-        System.out.println(input);
+        String input;
+        boolean successGuess = false;
+
+        do {
+            input = scanner.nextLine().toLowerCase();
+        } while (!validateInput(input));
+
+        for (int i = 0; i < riddleWord.length; i++) {
+            if (riddleWord[i].equals(input)) {
+                successGuess = true;
+                mask.replace(i, i + 1, input.toUpperCase());
+            }
+        }
+
+        if (!successGuess) {
+            mistakeCounter++;
+            mistakeLetters.add(input);
+        }
     }
 
     private boolean validateInput(String input) {
-        // regex - check only russian single word
-        return true;
+        if (input.matches(SINGLE_LETTER_REGEX)) {
+            if (mistakeLetters.contains(input) || mask.indexOf(input.toUpperCase()) != -1) {
+                System.out.println("Вы уже использовали эту букву! Выберите другую: ");
+                return false;
+            } else
+                return true;
+
+        } else {
+            System.out.println("Неверный ввод! Введите только 1 букву из кириллического алфавита: ");
+            return false;
+        }
+    }
+
+    private boolean checkGameState() {
+        String word = String.join("", riddleWord);
+
+        if (mistakeCounter == MAX_MISTAKES) {
+            System.out.printf("Вы проиграли! Загаданное слово: %s", word);
+            return false;
+        } else if (!mask.toString().contains("_")) {
+            System.out.printf("Поздравляем! Вы победили! Загаданное слово: %s", word);
+            return false;
+        } else {
+            return true;
+        }
     }
 }
