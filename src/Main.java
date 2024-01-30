@@ -11,20 +11,20 @@ public class Main {
     }
 
     public static boolean startOrLeave() {
-        System.out.println("\nНачать новую игру? Введите Y/N: ");
+        System.out.println("\nНачать новую игру? Введите Да/Нет: ");
         Scanner scanner = new Scanner(System.in);
 
         do {
             String input = scanner.nextLine().toLowerCase();
 
-            if (input.equals("n")) {
+            if (input.equals("нет")) {
                 System.out.println("До встречи!");
                 return false;
-            } else if (input.equals("y")) {
+            } else if (input.equals("да")) {
                 System.out.println("Начнем игру!");
                 return true;
             } else {
-                System.out.println("Введите 'Y' для начала игры или 'N' для завершения!");
+                System.out.println("Введите 'Да' для начала игры или 'Нет' для завершения!");
             }
         } while (true);
     }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class HangmanGame {
@@ -19,10 +18,11 @@ public class HangmanGame {
     }
 
     public void playGame() {
-        do {
+        while (checkGameState()) {
             printGameState();
-            playerTurn();
-        } while (checkGameState());
+            String letter = playerGuess();
+            openLettersOrAddMistake(letter);
+        }
     }
 
     private String getGallows() {
@@ -58,25 +58,30 @@ public class HangmanGame {
         System.out.printf("Ошибки (%d): \u001B[31m%s\u001B[0m%n", mistakeCounter, String.join(", ", mistakeLetters));
     }
 
-    private void playerTurn() {
+    private String playerGuess() {
         System.out.println("Введите букву: ");
         String input;
-        boolean successGuess = false;
 
         do {
             input = scanner.nextLine().toLowerCase();
         } while (!validateInput(input));
 
+        return input;
+    }
+
+    private void openLettersOrAddMistake(String letter) {
+        boolean successGuess = false;
+
         for (int i = 0; i < riddleWord.length; i++) {
-            if (riddleWord[i].equals(input)) {
+            if (riddleWord[i].equals(letter)) {
                 successGuess = true;
-                mask.replace(i, i + 1, input.toUpperCase());
+                mask.replace(i, i + 1, letter.toUpperCase());
             }
         }
 
         if (!successGuess) {
             mistakeCounter++;
-            mistakeLetters.add(input);
+            mistakeLetters.add(letter);
         }
     }
 
