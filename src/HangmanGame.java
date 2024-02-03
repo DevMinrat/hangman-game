@@ -10,11 +10,12 @@ public class HangmanGame {
 
     private static final String SINGLE_LETTER_REGEX = "^[А-Яа-я]$";
     private static final int MAX_MISTAKES = 6;
+    private static final String MASK_CHAR = "_";
 
-    public HangmanGame(String word) {
+    public HangmanGame(String word, Scanner scanner) {
         this.riddleWord = word.toLowerCase().split("");
-        this.scanner = new Scanner(System.in);
-        this.mask = new StringBuilder("_".repeat(riddleWord.length));
+        this.scanner = scanner;
+        this.mask = new StringBuilder(MASK_CHAR.repeat(riddleWord.length));
     }
 
     public void playGame() {
@@ -105,7 +106,7 @@ public class HangmanGame {
         if (mistakeCounter == MAX_MISTAKES) {
             System.out.printf("Вы проиграли! Загаданное слово: %s", word);
             return false;
-        } else if (!mask.toString().contains("_")) {
+        } else if (!mask.toString().contains(MASK_CHAR)) {
             System.out.printf("Поздравляем! Вы победили! Загаданное слово: %s", word);
             return false;
         } else {

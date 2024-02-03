@@ -2,18 +2,19 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         GameWord word = new GameWord("words.txt");
 
-        while (startOrLeave()) {
-            HangmanGame game = new HangmanGame(word.getRandomWord());
+        while (startOrLeave(scanner)) {
+            HangmanGame game = new HangmanGame(word.getRandomWord(), scanner);
             game.playGame();
         }
+
+        scanner.close();
     }
 
-    public static boolean startOrLeave() {
+    public static boolean startOrLeave(Scanner scanner) {
         System.out.println("\nНачать новую игру? Введите Да/Нет: ");
-        Scanner scanner = new Scanner(System.in);
-
         do {
             String input = scanner.nextLine().toLowerCase();
 
