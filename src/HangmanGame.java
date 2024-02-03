@@ -104,6 +104,7 @@ public class HangmanGame {
         String word = String.join("", riddleWord);
 
         if (mistakeCounter == MAX_MISTAKES) {
+            System.out.println(getGallows());
             System.out.printf("Вы проиграли! Загаданное слово: %s", word);
             return false;
         } else if (!mask.toString().contains(MASK_CHAR)) {
